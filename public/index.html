@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Chat</title>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <h1>Room Chat</h1>
+    <button id="create-room">Create Room</button>
+    <input type="text" id="room-id" placeholder="Enter room ID to join">
+    <button id="join-room">Join Room</button>
+    <div id="messages"></div>
+    <input type="text" id="message" placeholder="Type a message">
+    <button id="send-message">Send</button>
+
+    <script>
+        const socket = io();
+        const messagesDiv = document.getElementById('messages');
+
+        document.getElementById('create-room').onclick = async () => {
+            const response = await fetch('rooms', { method: 'POST' });
+            debugger
+            const data = await response.json();
+            alert(`Room created! Share this link: http://localhost:3000/?roomId=${data.roomId}`);
+        };
+
+        document.getElementById('join-room').onclick = () => {
+            const roomId = document.getElementById('room-id').value;
+            socket.emit('joinRoom', roomId);
+        };
+
+        socket.on('message', (message) => {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            messagesDiv.appendChild(messageElement);
+        });
+
+        socket.on('participants', (participants) => {
+            const participantsDiv = document.getElementById('participants');
+            participantsDiv.innerHTML = ''; // Clear existing list
+            participants.forEach(participant => {
+                const participantElement = document.createElement('div');
+                participantElement.textContent = participant;
+                participantsDiv.appendChild(participantElement);
+            });
+        });
+
+        socket.on('historicalMessages', (messages) => {
+            messages.forEach(message => {
+                const messageElement = document.createElement('div');
+                messageElement.textContent = message;
+                messagesDiv.appendChild(messageElement);
+            });
+        });
+
+
+
+        document.getElementById('send-message').onclick = () => {
+            const roomId = document.getElementById('room-id').value;
+            const message = document.getElementById('message').value;
+            
+            if (!roomId || !message) {
+                alert('Please enter both room ID and message.');
+                return;
+            }
+            
+            socket.emit('message', roomId, message);
+            document.getElementById('message').value = '';
+        };
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Environment variables
+environment/*
+!environment/*.reference.env
+
+# Build output
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# IDE or editor-specific files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Ignore npm package lock
+package-lock.json
+yarn.lock
+
+# Ignore yarn integrity file
+.yarn-integrity
+
+# Ignore all npm debug files
+npm-debug.log*
