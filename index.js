@@ -3,10 +3,10 @@
 require('./environment')
 require('./src/db')
 
-const {logInfo} = require('./src/logger')
+const { logInfo } = require('./src/logger')
 const { initSocket } = require('./src/socket');
-const roomRoutes = require('./src/routes/roomRoutes');
-const {corsConfig} = require('./cors')
+const { roomRoutes, googleAuthRoutes } = require('./src/routes')
+const { corsConfig } = require('./cors')
 
 const express = require('express');
 const http = require('http');
@@ -22,8 +22,10 @@ app.use(corsConfig)
 // Serve the static files for the client
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Use the room routes
-app.use('/rooms', roomRoutes); // Mount the routes under the '/rooms' path
+// room routes
+app.use('/api', roomRoutes)
+
+app.use('/api', googleAuthRoutes)
 
 // Start the server
 const PORT = process.env.PORT || 3000;
