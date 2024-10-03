@@ -1,7 +1,7 @@
 'use strict'
 
 const Redis = require('ioredis');
-const {logInfo, logError} = require('../logger')
+const { logInfo, logError } = require('../logger')
 
 // Configure Redis
 // const redis = new Redis(process.env.REDIS_URL); // Use your Redis URL from .env
@@ -36,9 +36,23 @@ const redisGetMessages = async (roomId) => {
   return messages
 }
 
+const redisTokenBlackList = async (token) => {
+  const expiration = process.env.BLACKLIST_TOKEN_EXPIRATION
+  const key = `blacklist_token:${token}`
+  await redis.setex(key, expiration, 'blackListed')
+}
+
+const redisIsTokenBlackListed = async (token) => {
+  const key = `blacklist_token:${token}`
+  const res = await redis.exists(key)
+  return res === 1 // is 1 if exists, 0 if not
+}
+
 module.exports = {
   redisAddRoom,
   redisGetRoom,
   redisGetMessages,
-  redisPushMessage
+  redisPushMessage,
+  redisTokenBlackList,
+  redisIsTokenBlackListed
 }
