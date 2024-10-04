@@ -1,11 +1,14 @@
 
 
 TODO:
-1. separate BE & UI
-2. User schema
-3. User google login SSO
-4. update rooms schema to consider all cases
-4. ...
+1. separate BE & UI ✔
+2. User schema ✔
+3. User google singin ✔
+4. run both BE and FE and test login mech + accordingly update user's schema ✔
+5. update rooms schema to consider all cases
+6. User is able to create room
+7. User is able to join room
+6. ...
 
 
 
