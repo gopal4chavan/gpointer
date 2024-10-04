@@ -16,8 +16,6 @@ router.post('/auth/google', async (req, res) => {
   try {
     const payload = await verify(token);
     const user = await updateOrAddUser(payload)
-    // Check if the user exists in your database
-    // If not, create a new user
     const userId = user._id
 
     // Create a JWT token

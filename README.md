@@ -5,10 +5,11 @@ TODO:
 2. User schema ✔
 3. User google singin ✔
 4. run both BE and FE and test login mech + accordingly update user's schema ✔
-5. update rooms schema to consider all cases
-6. User is able to create room
-7. User is able to join room
-6. ...
+5. User is able to create room ✔
+6. update rooms schema to consider all cases ✔
+7. update react UI to have socket setup
+8. User is able to join room
+9. ...
 
 
 

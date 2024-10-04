@@ -1,14 +1,16 @@
 'use strict';
 
-const Room = require('../models/rooms'); // Import the Room model
+const Room = require('../models/rooms');
+
 
 /**
- * Create a new room
- * @param {String} name - The name of the room
- * @returns {Promise} - Promise representing the created room
+ * create room
+ * @param {String} name - room name
+ * @param {String} host - user._id of user creating room
+ * @returns {Promise} - Promise representing the room object
  */
-const createRoom = async (name) => {
-    const room = new Room({ name });
+const createRoom = async (name, host) => {
+    const room = new Room({ name, host });
     return await room.save();
 };
 
