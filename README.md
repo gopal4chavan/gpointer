@@ -19,3 +19,4 @@ MVP Goals:
 3. User is able to add items to room(board)[add, update, delete etc]
 4. Joined users can score the selected item
 5. ...
+
