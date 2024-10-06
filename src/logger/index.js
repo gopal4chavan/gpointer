@@ -1,5 +1,6 @@
 'use strict'
 
-const {logInfo} = require('./consoleLogger')
+const { logInfo, logError } = require('./consoleLogger')
 
 module.exports.logInfo = logInfo
+module.exports.logError = logError

@@ -21,7 +21,7 @@ router.post('/auth/google', async (req, res) => {
     // Create a JWT token
     const jwtToken = jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: '1h' });
 
-    res.status(200).json({ token: jwtToken });
+    res.status(200).json({ token: jwtToken, user });
   } catch (error) {
     res.status(401).json({ error: 'Invalid token' });
   }

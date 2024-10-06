@@ -4,6 +4,7 @@ const socketIo = require('socket.io')
 const { logInfo } = require('../logger')
 const { roomEvents } = require('./roomEvents')
 const { getRoom, updateRoomDetails } = require('../helper/redisMongo')
+const { redisSetUserSocketId } = require('../redis')
 
 let io
 
@@ -24,27 +25,23 @@ const getIOInstance = () => {
 const connectionHandler = (socket) => {
   logInfo('A User Connected')
 
-  socket.on(roomEvents.REGISTER_USER, (userName, socket) => registerUser(userName, socket))
+  socket.on(roomEvents.REGISTER_USER, userName => { registerUser(userName, socket) })
   socket.on(roomEvents.JOIN_ROOM, roomId => joinRoomHandler(roomId, socket))
   socket.on(roomEvents.MESSAGE, (roomId, message) => messageHandler(roomId, message, socket))
   socket.on(roomEvents.DISCONNECT, () => disconnectHandler(socket))
 }
 
-const registerUser = (userName, socket) => {
-  if (!username) {
-    socket.emit('error', 'Username is required.');
+function registerUser(userName, socket) {
+
+  if (!userName) {
+    socket.emit('error', 'userName is required.');
     return;
   }
+  redisSetUserSocketId(userName, socket.id);
 
-  // Store socket.id with the username in Redis
-  redis.hset(`user:${username}`, 'socketId', socket.id, (err, reply) => {
-    if (err) {
-      socket.emit('error', 'Error storing user data.');
-      return;
-    }
-    socket.emit('registrationSuccess', `User ${username} registered with socket ID: ${socket.id}`);
-  });
+  socket.emit('registrationSuccess', `User ${userName} registered with socket ID: ${socket.id}`);
 }
+
 
 const joinRoomHandler = async (roomId, socket) => {
   const room = await getRoom(roomId)
