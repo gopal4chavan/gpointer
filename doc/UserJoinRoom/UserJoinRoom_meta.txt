@@ -1,0 +1,34 @@
+title User joins room
+
+participant localstore
+participant User/Client
+participant Socket
+participant Server
+participant Redis
+participant DB
+
+User/Client<->Socket: establish connection
+
+
+alt Username present in local storage
+    User/Client->Socket: emit<register-user> with username
+else Username not present
+    note over User/Client: take the name from user
+    note over User/Client: store info onto local store
+    User/Client->localstore: store username
+    User/Client->Socket: emit<register-user> with new username
+end
+
+note over Socket: register-user listener
+Socket->Redis: cache user socket & user id info into map
+User/Client->Server: POST /api/room along with roomName
+Server->DB: save Room
+Server->User/Client: return Room info
+Server->DB: save current user as Participant
+Server->Redis: sAdd participant with RoomId
+Server->User/Client: current_user_socket.emit<join-room>
+note over User/Client: join-room listener
+User/Client->Socket: emit<join-room>
+note over Socket: socket.join<current user to room>\nupdate participant list for that room
+User/Client<->Socket: disconnect
+Socket->Redis: Update participant status/info
