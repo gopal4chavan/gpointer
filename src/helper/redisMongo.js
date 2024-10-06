@@ -23,8 +23,7 @@ function updateRoomDetails(roomId, roomDetails) {
 
 async function addNewRoom(roomName, user) {
   const room = await createRoom(roomName, user.id)
-  asyncUpdateParticipantAndRedis(room, user) // intentionally keeping it async
-  return room.id
+  return room
 }
 
 async function asyncUpdateParticipantAndRedis(room, user) {
@@ -43,5 +42,6 @@ async function asyncUpdateParticipantAndRedis(room, user) {
 module.exports = {
   getRoom,
   updateRoomDetails,
-  addNewRoom
+  addNewRoom,
+  asyncUpdateParticipantAndRedis
 }

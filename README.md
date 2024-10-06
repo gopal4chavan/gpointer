@@ -7,6 +7,7 @@ TODO:
 4. run both BE and FE and test login mech + accordingly update user's schema ✔
 5. User is able to create room ✔
 6. update rooms schema to consider all cases ✔
+7. Start on documenting the important flow ✔
 7. update react UI to have socket setup
 8. User is able to join room
 9. ...

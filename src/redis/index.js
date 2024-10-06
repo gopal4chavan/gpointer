@@ -3,6 +3,11 @@
 const Redis = require('ioredis');
 const { logInfo, logError } = require('../logger')
 
+const PARTICIPANTS = 'participants'
+const MESSAGES = 'messages'
+const ROOM = 'room'
+const USER = 'user'
+
 // Configure Redis
 // const redis = new Redis(process.env.REDIS_URL); // Use your Redis URL from .env
 const redis = new Redis()
@@ -15,11 +20,37 @@ redis.on('error', (err) => {
 
 const redisAddRoom = (roomId, value) => {
   // Store room in Redis (if needed)
-  redis.set(`room:${roomId}`, JSON.stringify(value), 'EX', 3600); // Expires in 1 hour
+  redis.set(`${ROOM}:${roomId}`, JSON.stringify(value), 'EX', 3600); // Expires in 1 hour
+}
+
+const participantKey = (roomId) => {
+  return `${PARTICIPANTS}:${roomId}`
+}
+const redisPushParticipants = async (roomId, participant) => {
+  const key = participantKey(roomId)
+  participant.socketId = //TODO get socket id
+    await redis.sAdd(key, participant)
+}
+
+const redisGetParticipants = async (roomId) => {
+  const key = participantKey(roomId)
+  return await redis.sMembers(key)
+}
+
+const userKey = (userName) => {
+  return `${USER}:${userName}`
+}
+const redisSetUserSocketId = async (userName, socketId) => {
+  const key = userKey(userName)
+  redis.set(key, socketId, 'EX', 3600)
+}
+const redisGetUserSocketId = async (userName, socketId) => {
+  const key = userKey(userName)
+  redis.get(key)
 }
 
 const redisGetRoom = async (roomId) => {
-  const key = `room:${roomId}`
+  const key = `${ROOM}:${roomId}`
   return await redis.get(key)
 }
 
@@ -54,5 +85,9 @@ module.exports = {
   redisGetMessages,
   redisPushMessage,
   redisTokenBlackList,
-  redisIsTokenBlackListed
+  redisIsTokenBlackListed,
+  redisPushParticipants,
+  redisGetParticipants,
+  redisSetUserSocketId,
+  redisGetUserSocketId
 }
