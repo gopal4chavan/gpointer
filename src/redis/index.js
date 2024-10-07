@@ -29,12 +29,12 @@ const participantKey = (roomId) => {
 const redisPushParticipants = async (roomId, participant) => {
   const key = participantKey(roomId)
   participant.socketId = //TODO get socket id
-    await redis.sAdd(key, participant)
+    await redis.sadd(key, participant)
 }
 
 const redisGetParticipants = async (roomId) => {
   const key = participantKey(roomId)
-  return await redis.sMembers(key)
+  return await redis.smembers(key)
 }
 
 const userKey = (userName) => {
@@ -46,7 +46,7 @@ const redisSetUserSocketId = async (userName, socketId) => {
 }
 const redisGetUserSocketId = async (userName, socketId) => {
   const key = userKey(userName)
-  redis.get(key)
+  return await redis.get(key)
 }
 
 const redisGetRoom = async (roomId) => {

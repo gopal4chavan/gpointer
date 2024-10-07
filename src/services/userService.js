@@ -29,7 +29,7 @@ async function updateOrAddUser({ sub: googleUserId, name, email }) {
 
 async function getUser(userId) {
   try {
-    let user = await User.findOne({ userId })
+    let user = await User.findOne({ _id: userId })
     return user
   } catch (error) {
     console.error('Error updating or adding user:', error)

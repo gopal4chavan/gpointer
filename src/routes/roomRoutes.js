@@ -9,8 +9,8 @@ const { getIOInstance } = require('../socket')
 
 // Endpoint to create a room
 router.post('/rooms', async (req, res) => {
-  const roomName = req.body.name
-  const host = req.user._id
+  const roomName = req.body.roomName
+  const host = req.userId
 
   try {
     const room = await createRoom(roomName, host)
@@ -32,10 +32,7 @@ router.post('/rooms', async (req, res) => {
         const socket = io.sockets.sockets.get(socketId);
 
         if (socket) {
-          socket.emit('joinRoom')
-          participant.socketId = socketId
-          // Push participant to Redis in the background
-          await redisPushParticipants(room._id, participant);
+          socket.emit('joinRoom', room._id)
         } else {
           console.warn('Socket not found for user:', req.user.name);
         }
